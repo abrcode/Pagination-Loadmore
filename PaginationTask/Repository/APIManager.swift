@@ -6,43 +6,54 @@
 //
 
 import Foundation
-//import Alamofire
+import Alamofire
 
 
 
 class APIManager {
     
+    static let shared = APIManager()
     
-    func fetchData(){
-       
-        let url = URL(string: "http://hn.algolia.com/api/v1/search_by_date?tags=story&page=")
-        var request = URLRequest(url: url!)
-        
-        request.setValue("authToken", forHTTPHeaderField: "Authorization")
-        
-        
-//        let postBody = PostData.self
-//        let postData = try? JSONSerialization.data(withJSONObject: postBody, options: [])
-        
-        request.httpMethod = "GET"
-//        request.httpBody = postData
+    let connectivityManager = NetworkReachabilityManager()
+    
+    
+    
+    // MARK: - NORMAl GET API Call
+    
+    func  getRequestAPICall <T: Codable> ( urlString : String! ,
+                                           method: HTTPMethod,
+                                           parameters: Parameters,
+                                           type: T.Type,
+                                           completion : @escaping (T? , String?) -> Void ){
         
         
-        let session = URLSession.shared
-        session.dataTask(with: url!) { ( data, response , error) in
+        AF.request(urlString, method: method, parameters: parameters).responseJSON { response in
             
-            if let data = data {
-                do {
-                    let response = try? JSONDecoder().decode(PostData.self, from: data)
-                    print(response)
-                } catch{
+            switch response.result{
+            case .success(_):
+                
+                if response.value != nil , response.value is NSDictionary {
                     
+                    
+                    guard let data = response.data else { return completion(nil , response.error?.localizedDescription) }
+                    
+                    do {
+                        let returnResponse = try JSONDecoder().decode(T.self, from: data)
+                        
+                        completion(returnResponse , nil)
+                        
+                    } catch {
+                        
+                        completion(nil , response.error?.localizedDescription)
+                    }
                 }
+                break
+            case .failure(let error):
+                
+                completion(nil, error.localizedDescription)
+                
+                break
             }
-            
-        }.resume()
-        
+        }
     }
-    
-    
 }
