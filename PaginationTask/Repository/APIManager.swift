@@ -8,6 +8,12 @@
 import Foundation
 import Alamofire
 
+class Connectivity {
+    class var isConnectedToInternet:Bool {
+        return NetworkReachabilityManager()!.isReachable
+    }
+}
+
 
 
 class APIManager {
@@ -18,9 +24,9 @@ class APIManager {
     
     
     
-    // MARK: - NORMAl GET API Call
+    // MARK: - NORMAl API Call
     
-    func  getRequestAPICall <T: Codable> ( urlString : String! ,
+    func  webAPICall <T: Codable> ( urlString : String! ,
                                            method: HTTPMethod,
                                            parameters: Parameters,
                                            type: T.Type,
@@ -56,4 +62,40 @@ class APIManager {
             }
         }
     }
+    
+    
+    // MARK: - Anothe method for Webservice call
+    func apiRequest <T: Codable> ( url : String,
+                                   type : T.Type,
+                                   httpMethod : HTTPMethod,
+                                   params: Parameters ,
+                                   completion : @escaping (Bool , T?) -> Void) {
+        
+     
+        AF.request(url, method: httpMethod, parameters: params, encoding: JSONEncoding.default, headers: HTTPHeaders()).responseDecodable(of: type.self) { response in
+            
+            if let data = response.data {
+                do {
+                    let statusCode = response.response?.statusCode
+                    switch statusCode {
+                    case 200:
+                        let returnResponse = try JSONDecoder().decode(type.self, from: data)
+                        print("Proper result--> : \(returnResponse)")
+                        completion(true , returnResponse)
+                    default:
+                        break
+                    }
+                } catch (let error) {
+                    // Errror
+                    print("errorMsg-->", error.localizedDescription)
+                }
+            } else {
+                //Error
+                print("errorMsg-->", "Something went wrong")
+            }
+            
+        }
+        
+    }
+    
 }
