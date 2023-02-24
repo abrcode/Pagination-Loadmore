@@ -14,8 +14,6 @@ class Connectivity {
     }
 }
 
-
-
 class APIManager {
     
     static let shared = APIManager()
@@ -27,10 +25,10 @@ class APIManager {
     // MARK: - NORMAl API Call
     
     func  webAPICall <T: Codable> ( urlString : String! ,
-                                           method: HTTPMethod,
-                                           parameters: Parameters,
-                                           type: T.Type,
-                                           completion : @escaping (T? , String?) -> Void ){
+                                    method: HTTPMethod,
+                                    parameters: Parameters,
+                                    type: T.Type,
+                                    completion : @escaping (T? , String?) -> Void ){
         
         
         AF.request(urlString, method: method, parameters: parameters).responseJSON { response in
@@ -39,25 +37,17 @@ class APIManager {
             case .success(_):
                 
                 if response.value != nil , response.value is NSDictionary {
-                    
-                    
                     guard let data = response.data else { return completion(nil , response.error?.localizedDescription) }
-                    
                     do {
                         let returnResponse = try JSONDecoder().decode(T.self, from: data)
-                        
                         completion(returnResponse , nil)
-                        
                     } catch {
-                        
                         completion(nil , response.error?.localizedDescription)
                     }
                 }
                 break
             case .failure(let error):
-                
                 completion(nil, error.localizedDescription)
-                
                 break
             }
         }
@@ -65,15 +55,23 @@ class APIManager {
     
     
     // MARK: - Anothe method for Webservice call
-    func apiRequest <T: Codable> ( url : String,
+    func apiRequest <T: Decodable> (url : EndPoint,
                                    type : T.Type,
                                    httpMethod : HTTPMethod,
-                                   params: Parameters ,
+                                   params: [String:Any]? ,
+                                   showLoader : Bool,
                                    completion : @escaping (Bool , T?) -> Void) {
         
-     
-        AF.request(url, method: httpMethod, parameters: params, encoding: JSONEncoding.default, headers: HTTPHeaders()).responseDecodable(of: type.self) { response in
+        if showLoader {
+            Loader.start()
+        }
+        var param = params
+        if httpMethod == .get {
+            param = nil
+        }
+        AF.request(url.path, method: httpMethod, parameters: param, encoding: JSONEncoding.default, headers: HTTPHeaders()).responseDecodable(of: type.self) { response in
             
+            Loader.stop()
             if let data = response.data {
                 do {
                     let statusCode = response.response?.statusCode

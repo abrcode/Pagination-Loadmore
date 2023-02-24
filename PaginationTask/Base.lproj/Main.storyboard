@@ -43,6 +43,41 @@
             </objects>
             <point key="canvasLocation" x="944.92753623188412" y="68.973214285714278"/>
         </scene>
+        <!--PostVC-->
+        <scene sceneID="c9Q-pF-LSW">
+            <objects>
+                <viewController storyboardIdentifier="PostVC" id="41L-ef-oZy" customClass="PostVC" customModule="PaginationTask" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lO2-OV-Hne">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="dhX-Xq-Pax">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="41L-ef-oZy" id="UqX-Gz-gK3"/>
+                                    <outlet property="delegate" destination="41L-ef-oZy" id="nNl-R0-kdh"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="akw-LE-Dgt"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="dhX-Xq-Pax" firstAttribute="leading" secondItem="akw-LE-Dgt" secondAttribute="leading" id="4PU-pQ-2pu"/>
+                            <constraint firstItem="akw-LE-Dgt" firstAttribute="bottom" secondItem="dhX-Xq-Pax" secondAttribute="bottom" id="4jn-2o-zKn"/>
+                            <constraint firstItem="akw-LE-Dgt" firstAttribute="trailing" secondItem="dhX-Xq-Pax" secondAttribute="trailing" id="CY6-zj-LV4"/>
+                            <constraint firstItem="dhX-Xq-Pax" firstAttribute="top" secondItem="akw-LE-Dgt" secondAttribute="top" id="Wl8-Ig-eAh"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="b2L-6b-T7e"/>
+                    <connections>
+                        <outlet property="tableView" destination="dhX-Xq-Pax" id="yGU-91-jID"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UfS-1o-Usl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="945" y="746"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="eZ7-lW-Q41">
             <objects>
@@ -53,7 +88,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="gF5-YC-KQs"/>
+                        <segue destination="41L-ef-oZy" kind="relationship" relationship="rootViewController" id="xCy-PR-7Zn"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="omH-XI-drD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
